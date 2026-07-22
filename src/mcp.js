@@ -1,19 +1,17 @@
+#!/usr/bin/env node
+
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import * as z from 'zod/v4';
 
-import { 
+import {
     addSnippet, 
     updateSnippet, 
     deleteSnippet, 
     getSnippet, 
     search 
 } from './index.js';
-
-const PRODUCT_INFO = {
-    name: 'snippets-mcp',
-    version: '1.0.0'
-};
+import { PRODUCT_INFO, MAX_RESULT_LIMIT } from './constants.js';
 
 const server = new McpServer({
     "name": PRODUCT_INFO.name,
@@ -70,9 +68,9 @@ server.registerTool(
             query: z.string().optional().describe('Natural language search query (e.g., "function to calculate factorial", "async error handling")'),
             tags: z.array(z.string()).optional().describe('Filter by specific tags (AND logic - snippet must have ALL tags)'),
             language: z.string().optional().describe('Filter by programming language'),
-            dateStart: z.string().optional().describe('Filter by creation date start (ISO date string)'),
-            dateEnd: z.string().optional().describe('Filter by creation date end (ISO date string)'),
-            limit: z.number().optional().default(10).describe('Maximum number of results to return (default: 10)')
+            dateStart: z.string().datetime({ offset: true }).optional().describe('Filter by creation date start (ISO-8601 timestamp)'),
+            dateEnd: z.string().datetime({ offset: true }).optional().describe('Filter by creation date end (ISO-8601 timestamp)'),
+            limit: z.number().int().min(1).max(MAX_RESULT_LIMIT).optional().default(10).describe(`Maximum number of results (1-${MAX_RESULT_LIMIT})`)
         })
     },
     async (params) => {
@@ -268,4 +266,7 @@ async function start() {
     console.error('Snippet Manager MCP server running on stdio');
 }
 
-start().catch(err => console.error(`Snippet-MCP server shutdown with error: ${err.message}`));
+start().catch((error) => {
+    console.error(`Snippet-MCP server shutdown with error: ${error.message}`);
+    process.exitCode = 1;
+});

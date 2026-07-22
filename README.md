@@ -12,6 +12,7 @@
 - Date range filtering
 - No database needed. JSON based storage.
 - Vector embeddings cached for fast retrieval
+- Atomic, queued JSON writes to protect the database from partial writes
 
 ## Installation
 
@@ -49,7 +50,7 @@ Updates an existing snippet. Re-generates embeddings if code, tags, or descripti
 
 **Parameters:**
 - `id` (string, required) - Snippet ID
-- `updates` (object) - Object containing fields to update (code, tags, language, description)
+- `code`, `tags`, `language`, `description` (optional) - Fields to update directly
 
 ### delete-snippet
 
@@ -129,4 +130,3 @@ Snippets are stored in a JSON file specified by environment variable `SNIPPETS_F
 ## License
 
 [MIT](LICENSE)
-

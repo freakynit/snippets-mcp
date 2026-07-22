@@ -8,7 +8,8 @@
   "main": "src/mcp.js",
   "type": "module",
   "scripts": {
-    "start": "node src/mcp.js"
+    "start": "node src/mcp.js",
+    "test": "node --test"
   },
   "keywords": ["mcp", "snippets", "code-snippets", "code-manager", "json-storage", "nodejs", "developer-tools", "code-organization", "code-search", "ai", "ml", "nlp", "developer-productivity", "semantic", "mcp-server"],
   "author": "Nitin Bansal <nitinbansal85@gmail.com>",
